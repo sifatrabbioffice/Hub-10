@@ -1,0 +1,34 @@
+name: Build GameHub Pro IPA
+on: [push]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Environment
+        run: brew install xcodegen
+      - name: Generate Project
+        run: xcodegen generate
+      - name: Compile and Archive
+        run: |
+          xcodebuild archive \
+            -project GameHub.xcodeproj \
+            -scheme GameHub \
+            -sdk iphoneos \
+            -configuration Release \
+            -archivePath build/GameHub.xcarchive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
+      - name: Package for Sideload
+        run: |
+          mkdir -p Payload
+          cp -r build/GameHub.xcarchive/Products/Applications/GameHub.app Payload/
+          zip -r GameHub_Pro_v1.ipa Payload
+      - name: Release IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: GameHub-Pro-Build
+          path: GameHub_Pro_v1.ipa
