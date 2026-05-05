@@ -1,0 +1,20 @@
+name: GameHub
+settings:
+  base:
+    SWIFT_VERSION: 5.0
+    TARGETED_DEVICE_FAMILY: "1" # iPhone
+    IPHONEOS_DEPLOYMENT_TARGET: "15.0"
+targets:
+  GameHub:
+    type: application
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources: [GameHub]
+    dependencies:
+      - framework: WebKit.framework # Steam Login-এর জন্য
+      - framework: Metal.framework   # হাই-গ্রাফিক্স গেমের জন্য
+      - framework: AuthenticationServices.framework # Cloud/Steam Auth-এর জন্য
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.gamehub.emulator.pro
+      INFOPLIST_FILE: GameHub/Info.plist
+      CODE_SIGNING_ALLOWED: NO
